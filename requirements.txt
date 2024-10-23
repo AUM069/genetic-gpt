@@ -1,40 +1,6 @@
-# Core dependencies
-streamlit>=1.31.0
-requests>=2.31.0
-datetime>=5.4
-groq>=0.4.0
-SpeechRecognition>=3.10.0
+streamlit==1.27.0
+requests==2.31.0
+xmltodict==0.13.0
+speechrecognition==3.8.1
+groq  # Add the correct version for the Groq package or its official name if different
 
-# Audio processing
-PyAudio>=0.2.14
-
-# XML parsing
-xml.etree.ElementTree
-
-# Additional dependencies for audio recognition
-pyttsx3>=2.90
-pyaudio>=0.2.14
-
-# HTTP and networking
-urllib3>=2.2.0
-certifi>=2024.2.2
-
-# Date and time handling
-python-dateutil>=2.8.2
-
-# Optional but recommended for better performance
-numpy>=1.24.0
-pandas>=2.1.0
-
-# Security
-python-dotenv>=1.0.0
-
-# For development and testing
-pytest>=7.4.0
-black>=23.3.0
-flake8>=6.0.0
-
-# System specific dependencies
-# Note: Some of these might need to be installed via system package manager
-# For Linux: portaudio19-dev python3-all-dev
-# For Windows: Visual C++ build tools
