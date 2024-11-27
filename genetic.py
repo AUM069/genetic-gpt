@@ -3,17 +3,17 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from groq import Groq
-import os
+import speech_recognition as sr
 
 # Set page config at the very beginning
 st.set_page_config(page_title="Genetics-GPT", layout="wide")
 
-# Initialize Groq client using environment variable
+# Initialize Groq client
 client = Groq(
-    api_key=("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")
+    api_key="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"  # Replace with your actual Groq API key
 )
 
-# Initialize chat history with a focused system message
+# Initialize chat history with a more focused system message
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": "You are an AI assistant specialized in genetics. Provide accurate and helpful information about genetics topics, and help search for research papers."}
@@ -47,6 +47,23 @@ def fetch_arxiv_papers(topic: str, max_results: int = 3):
         })
     return papers
 
+# Function for transcribing audio input
+def transcribe_audio():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        st.write("Listening... Speak your query.")
+        audio = r.listen(source)
+        st.write("Processing speech...")
+    try:
+        text = r.recognize_google(audio)
+        return text
+    except sr.UnknownValueError:
+        st.write("Sorry, I couldn't understand that.")
+        return None
+    except sr.RequestError:
+        st.write("Sorry, there was an error processing your speech.")
+        return None
+
 # Chat function using Groq API
 def CustomChatGPT(user_input):
     st.session_state.messages.append({"role": "user", "content": user_input})
@@ -68,8 +85,18 @@ def main():
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-    # User input
-    user_input = st.chat_input("Write your query or search for research papers:")
+    # User input options
+    input_option = st.radio("Choose input method:", ("Text", "Voice"))
+
+    if input_option == "Text":
+        user_input = st.chat_input("Write your query or search for research papers:")
+    else:
+        if st.button("Start Speaking"):
+            user_input = transcribe_audio()
+            if user_input:
+                st.write(f"You said: {user_input}")
+        else:
+            user_input = None
 
     if user_input:
         # Determine if the input is for searching research papers or a genetics query
