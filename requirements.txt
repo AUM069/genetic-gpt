@@ -2,7 +2,7 @@ streamlit==1.27.0
 requests==2.31.0
 xmltodict==0.13.0
 speechrecognition==3.8.1
-groq  # Replace with the correct version of the Groq API
-pillow==10 # Ensure pillow is included, replace with the version you need
+groq
+pillow==9.5.0
 
 
