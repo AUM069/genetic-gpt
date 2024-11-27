@@ -3,5 +3,7 @@ requests==2.31.0
 xmltodict==0.13.0
 groq
 pillow==9.5.0
+SpeechRecognition
+pyaudio
 
 
