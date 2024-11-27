@@ -3,19 +3,17 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from groq import Groq
-import speech_recognition as sr
+import os
 
 # Set page config at the very beginning
 st.set_page_config(page_title="Genetics-GPT", layout="wide")
 
-# Initialize Groq client
+# Initialize Groq client using environment variable
 client = Groq(
-    api_key="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"  # Replace with your actual Groq API key
+    api_key=os.get("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")
 )
 
-ncbi_api_key = "1a0ae67dd7837c7beb18cd6ca75122b13b09"
-
-# Initialize chat history with a more focused system message
+# Initialize chat history with a focused system message
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "system", "content": "You are an AI assistant specialized in genetics. Provide accurate and helpful information about genetics topics, and help search for research papers."}
@@ -53,7 +51,7 @@ def fetch_arxiv_papers(topic: str, max_results: int = 3):
 def CustomChatGPT(user_input):
     st.session_state.messages.append({"role": "user", "content": user_input})
     resp = client.chat.completions.create(
-        model="mixtral-8x7b-32768",  # You can change this to the appropriate Groq model
+        model="mixtral-8x7b-32768",
         messages=st.session_state.messages,
         temperature=0.5,
         max_tokens=800
@@ -63,23 +61,6 @@ def CustomChatGPT(user_input):
     st.session_state.messages.append({"role": "assistant", "content": output_tokens})
     return output_tokens
 
-# Function for transcribing audio input
-def transcribe_audio():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.write("Listening... Speak your query.")
-        audio = r.listen(source)
-        st.write("Processing speech...")
-    try:
-        text = r.recognize_google(audio)
-        return text
-    except sr.UnknownValueError:
-        st.write("Sorry, I couldn't understand that.")
-        return None
-    except sr.RequestError:
-        st.write("Sorry, there was an error processing your speech.")
-        return None
-
 # Main function
 def main():
     # Display chat history
@@ -87,18 +68,8 @@ def main():
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-    # User input options
-    input_option = st.radio("Choose input method:", ("Text", "Voice"))
-
-    if input_option == "Text":
-        user_input = st.chat_input("Write your query or search for research papers:")
-    else:
-        if st.button("Start Speaking"):
-            user_input = transcribe_audio()
-            if user_input:
-                st.write(f"You said: {user_input}")
-        else:
-            user_input = None
+    # User input
+    user_input = st.chat_input("Write your query or search for research papers:")
 
     if user_input:
         # Determine if the input is for searching research papers or a genetics query
