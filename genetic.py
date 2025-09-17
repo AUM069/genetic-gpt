@@ -10,7 +10,7 @@ st.set_page_config(page_title="Genetics-GPT", layout="wide")
 
 # Initialize Groq client
 client = Groq(
-    api_key="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"  # Replace with your actual Groq API key
+    api_key=""  # Replace with your actual Groq API key
 )
 
 # Initialize chat history with a more focused system message
